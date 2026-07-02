@@ -22,6 +22,7 @@ look like::
 The Instrument.jl wraps a VISA library to provide instrument communications over
 the usual interfaces of GPIB, TCPIP, USB and RS232. In addition it provides types and macros to make it easy to write your own custom driver for a particular instrument.
 
+By default, an exception is thrown if the libvisa C library errors, you can turn this off by setting the environment variable `ENV["VISA_SHOULD_ERROR"] = "true"`.
 
 Contents:
 

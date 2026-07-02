@@ -92,7 +92,11 @@ macro check_status(viCall)
 		status = $viCall
 		if status < VI_SUCCESS
 			errMsg = codes[status]
-			error("VISA C call failed with status $(errMsg[1]): $(errMsg[2])")
+			if haskey(ENV, "VISA_SHOULD_ERROR") && ENV["VISA_SHOULD_ERROR"] == "false"
+				error("VISA C call failed with status $(errMsg[1]): $(errMsg[2])")
+			else
+				@error "VISA C call failed with status $(errMsg[1]): $(errMsg[2])"
+			end
 		end
 		status
 	end
@@ -101,7 +105,11 @@ end
 function check_status(status)
 	if status < VI_SUCCESS
 		errMsg = codes[status]
-		error("VISA C call failed with status $(errMsg[1]): $(errMsg[2])")
+		if haskey(ENV, "VISA_SHOULD_ERROR") && ENV["VISA_SHOULD_ERROR"] == "false"
+			@error "VISA C call failed with status $(errMsg[1]): $(errMsg[2])"
+		else
+			error("VISA C call failed with status $(errMsg[1]): $(errMsg[2])")
+		end
 	end
 	status
 end
@@ -254,10 +262,13 @@ end
 function viRead(instrHandle::ViSession; bufSize::UInt32=0x00000400)
 	buf = zeros(UInt8, bufSize)
 	(done, bytesRead) = viRead!(instrHandle, buf)
-	unsafe_string(pointer(buf))
+	if done
+		return unsafe_string(pointer(buf))
+	end
+	return buf[1:bytesRead]
 end
 
-function readavailable(instrHandle::ViSession)
+function Base.readavailable(instrHandle::ViSession)
 	ret = IOBuffer()
 	buf = Array{UInt8}(undef, 0x400)
 	while true
