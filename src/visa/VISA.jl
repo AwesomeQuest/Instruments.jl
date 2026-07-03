@@ -265,7 +265,8 @@ function viRead(instrHandle::ViSession; bufSize::UInt32=0x00000400)
 	if done
 		return unsafe_string(pointer(buf))
 	end
-	return buf[1:bytesRead]
+	remaining = readavailable(instrHandle)
+	return String([buf[1:bytesRead];remaining])
 end
 
 function Base.readavailable(instrHandle::ViSession)
