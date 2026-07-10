@@ -41,6 +41,8 @@ end
 
 @check_connected readavailable(instr::Instrument) = readavailable(instr.handle)
 
+@check_connected statusbyte(instr::Instrument) = viReadSTB(instr.handle)
+
 function query(instr::Instrument, msg::AbstractString; delay::Real=0)
 	write(instr, msg)
 	sleep(delay)

@@ -282,6 +282,13 @@ function Base.readavailable(instrHandle::ViSession)
 	take!(ret)
 end
 
+function viReadSTB(instrHandle::ViSession)
+	STB = ViUInt16[0]
+	check_status(ccall((:viReadSTB, libvisa), ViStatus,
+				(ViSession, ViPUInt16),
+				instrHandle, STB))
+	return STB[1]
+end
 
 # ViStatus _VI_FUNC  viReadAsync     (ViSession vi, ViPBuf buf, ViUInt32 cnt, ViPJobId  jobId);
 # ViStatus _VI_FUNC  viReadToFile    (ViSession vi, ViConstString filename, ViUInt32 cnt,
@@ -290,5 +297,4 @@ end
 # ViStatus _VI_FUNC  viWriteFromFile (ViSession vi, ViConstString filename, ViUInt32 cnt,
 #                                     ViPUInt32 retCnt);
 # ViStatus _VI_FUNC  viAssertTrigger (ViSession vi, ViUInt16 protocol);
-# ViStatus _VI_FUNC  viReadSTB       (ViSession vi, ViPUInt16 status);
 # ViStatus _VI_FUNC  viClear         (ViSession vi);
