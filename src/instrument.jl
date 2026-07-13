@@ -45,7 +45,8 @@ end
 
 @check_connected clear(instr::Instrument) = viClear(instr.handle)
 
-@check_connected function flush(instr::Instrument, mode=:read_discard)
+import Base: flush
+@check_connected function Base.flush(instr::Instrument, mode=:read_discard)
 	modebyte::ViUInt16 = 0
 	if mode === :read
 		modebyte = VI_VI_READ_BUF
