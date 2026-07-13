@@ -290,6 +290,18 @@ function viReadSTB(instrHandle::ViSession)
 	return STB[1]
 end
 
+function viClear(instrHandle::ViSession)
+	check_status(ccall((:viClear, libvisa), ViStatus,
+				(ViSession,),
+				instrHandle))
+end
+
+function viFlush(instrHandle::ViSession, mask::ViUInt16=VI_READ_BUF_DISCARD)
+	check_status(ccall((:viFlush, libvisa), ViStatus,
+				(ViSession, ViUInt16),
+				instrHandle, mask))
+end
+
 # ViStatus _VI_FUNC  viReadAsync     (ViSession vi, ViPBuf buf, ViUInt32 cnt, ViPJobId  jobId);
 # ViStatus _VI_FUNC  viReadToFile    (ViSession vi, ViConstString filename, ViUInt32 cnt,
 #                                     ViPUInt32 retCnt);

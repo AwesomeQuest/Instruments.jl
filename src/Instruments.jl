@@ -1,6 +1,10 @@
 module Instruments
 
-export Instrument, GenericInstrument, connect!, disconnect!, write, read, query, statusbyte
+export Instrument, GenericInstrument,
+    connect!, disconnect!,
+    write, read, query,
+    clear, flush,
+    statusbyte
 export ResourceManager
 export find_resources
 export @scpifloat

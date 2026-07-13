@@ -43,6 +43,24 @@ end
 
 @check_connected statusbyte(instr::Instrument) = viReadSTB(instr.handle)
 
+@check_connected clear(instr::Instrument) = viClear(instr.handle)
+
+@check_connected function flush(instr::Instrument, mode=:read_discard)
+	modebyte::ViUInt16 = 0
+	if mode === :read
+		modebyte = VI_VI_READ_BUF
+	elseif mode === :write
+		modebyte = VI_WRITE_BUF
+	elseif mode === :read_discard
+		modebyte = VI_READ_BUF_DISCARD
+	elseif mode === :write_discard
+		modebyte = VI_WRITE_BUF_DISCARD
+	else
+		throw(ArgumentError("`mode` must be one of :read, :write, :read_discard, or :write_discard"))
+	end
+	viFlush(instr.handle, modebyte)
+end
+
 function query(instr::Instrument, msg::AbstractString; delay::Real=0)
 	write(instr, msg)
 	sleep(delay)
